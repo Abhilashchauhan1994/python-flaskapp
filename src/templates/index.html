@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+
+{% include "header.html" %}
+
+
+{% block title %} TODO APP | FLASK {% endblock %}
+
+{% block body %} 
+<!-- Creating flash messages in flask -->
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+{% for message in messages %}
+<div class="container">
+  <div class="notification is-success my-4">
+    <button class="delete"></button>
+    <h1 class="has-text-centered">{{message}}</h1>
+  </div>
+</div>
+{% endfor %}
+{% endif %}
+{% endwith  %}
+<!-- Flash messages creation ends here -->
+<!-- we can ad here our all html body stuff -->
+<div class="container">
+  <div class="notification has-background-info">
+    <div class="level">
+      <div class="level-left is-size-4 mx-6 has-text-grey-darker">
+        <strong>ADD TODO</strong> 
+      </div>
+      <div class="level-right is-size-4 mx-6 ">
+        <button class="button is-rounded is-warning modal-button" data-target="myModal" aria-haspopup="true">Create A Todo</button>
+        <!-- creating a modal -->
+        <div class="modal" id="myModal">
+          <div class="modal-background"></div>
+          <div class="modal-card">
+            <form action="{{(url_for('addTodo'))}}" method="POST"> 
+              <header class="modal-card-head">
+                <p class="modal-card-title">New Task</p>
+                <!-- <button class="delete" aria-label="close"></button> -->
+                <label class="delete" for="element-toggle"></label>
+              </header>
+              <section class="modal-card-body">
+              <!-- creating form for task -->
+              
+                <div class="field">
+                  <label class="label">Task Name</label>
+                  <div class="control">
+                    <input class="input" type="text" placeholder="Enter the task" name="task">
+                  </div>
+                </div>
+            
+              </section>
+              <footer class="modal-card-foot">
+                <button class="button is-success" type="submit">Save changes</button>
+                <!-- <button class="button">Cancel</button> -->
+              </footer>
+            </form>
+          <!-- from ends -->
+          </div>
+        </div>
+        <!-- end of modal -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="columns mx-5 py-5">
+    <div class="column">
+      <h1 class="has-background-grey has-text-white is-size-4 has-text-centered">Assign Tasks</h1>
+      {% for row in Tasks %}
+      <div class="box has-background-primary my-2 ">
+        <div class="level">
+          <div class="level-left">
+            {{row.task_name}}
+          </div>
+          <div class="level-right">
+            <a href="/update/{{row.task_id}}" class="button is-rounded is-danger modal-button" data-target="editmodel{{row.task_id}}" aria-haspopup="true">Edit</a>
+            <a href="/delete/{{row.task_id}}" class="delete" data-target="editmodel{{row.task_id}}" aria-haspopup="true">Edit</a>
+          </div>
+        </div>
+      </div>
+      <!-- creating edit modals  -->
+      <div id="editmodel{{row.task_id}}" class="modal">
+        <form action="{{(url_for('updateTask'))}}" method="POST" >
+          <div class="modal-background"></div>
+          <div class="modal-card">
+            <header class="modal-card-head">
+              <p class="modal-card-title">Edit Task</p>
+              <button class="delete" aria-label="close"></button>
+            </header>
+            <section class="modal-card-body">              
+              <div class="control">
+                <input class="input is-primary my-3" type="hidden" name="taskId" value="{{row.task_id}}">
+                <input class="input is-primary my-3" type="text" name="taskName" value="{{row.task_name}}">
+              </div>
+              <div class="control">
+                <input class="input is-primary my-3" type="text" value="Task Status is : {{row.task_status}}" readonly>
+              </div>
+              <div class="select my-3">
+                <select name="taskStatus">
+                  <option value="">Select Task Status</option>
+                  <option value="notstarted">Not Started</option>
+                  <option value="progress">In-Progress</option>
+                  <option value="backlog">Backlog</option>
+                  <option value="completed">Completed</option>
+                </select>
+              </div>
+            </section>
+            <footer class="modal-card-foot">
+              <button class="button is-success">Save changes</button>
+              <button class="button">Cancel</button>
+            </footer>
+          </div>
+        </form>
+      </div>
+      <!-- Edit Modal creation ends here -->
+      {% endfor %}
+    </div>
+    <div class="column has-background-warning has-text-info-dark is-size-4 has-text-centered">
+      On-Going Tasks
+    </div>
+    <div class="column has-background-danger has-text-white is-size-4 has-text-centered">
+      Backlogs
+    </div>
+    <div class="column has-background-success has-text-white is-size-4 has-text-centered ">
+      Completed
+    </div>
+  </div>
+  
+</div>
+
+
+
+
+
+
+{% endblock %}
