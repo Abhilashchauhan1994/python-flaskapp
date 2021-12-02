@@ -51,7 +51,7 @@
             
               </section>
               <footer class="modal-card-foot">
-                <button class="button is-success" type="submit">Save changes</button>
+                <button class="button is-success" type="submit">Create Task</button>
                 <!-- <button class="button">Cancel</button> -->
               </footer>
             </form>
@@ -64,75 +64,66 @@
   </div>
 </div>
 
+<!-- todo list here -->
+{% for row in Tasks %}
 <div class="container">
-  <div class="columns mx-5 py-5">
-    <div class="column">
-      <h1 class="has-background-grey has-text-white is-size-4 has-text-centered">Assign Tasks</h1>
-      {% for row in Tasks %}
-      <div class="box has-background-primary my-2 ">
-        <div class="level">
-          <div class="level-left">
-            {{row.task_name}}
-          </div>
-          <div class="level-right">
-            <a href="/update/{{row.task_id}}" class="button is-rounded is-danger modal-button" data-target="editmodel{{row.task_id}}" aria-haspopup="true">Edit</a>
-            <a href="/delete/{{row.task_id}}" class="delete" data-target="editmodel{{row.task_id}}" aria-haspopup="true">Edit</a>
-          </div>
-        </div>
+  <div class="box py-3 my-3" style="background-color: #1d3557;">
+    <div class="level">
+      <div class="level-left has-text-white-bis">
+        <span>{{row.task_name}}</span>
       </div>
-      <!-- creating edit modals  -->
-      <div id="editmodel{{row.task_id}}" class="modal">
-        <form action="{{(url_for('updateTask'))}}" method="POST" >
+      <div class="level-right is-size-4 ">
+        {% if row.task_status == 'notstarted' %}
+          <span class="tag is-dark mx-6 is-size-6 is-uppercase">{{row.task_status}}</span>
+        {% elif row.task_status == 'progress' %}
+          <span class="tag is-warning  mx-6 is-size-6 is-uppercase">{{row.task_status}}</span>
+        {% elif row.task_status == 'backlog' %}
+          <span class="tag is-danger  mx-6 is-size-6 is-uppercase">{{row.task_status}}</span>
+        {% else %}
+          <span class="tag is-success  mx-6 is-size-6 is-uppercase">{{row.task_status}}</span>
+        {% endif %}
+          
+        <button class="button is-rounded is-danger modal-button" data-target="editmodel{{row.task_id}}" aria-haspopup="true">Edit</button>
+        <!-- creating edit modals  -->
+        <div class="modal" id="editmodel{{row.task_id}}">
           <div class="modal-background"></div>
           <div class="modal-card">
-            <header class="modal-card-head">
-              <p class="modal-card-title">Edit Task</p>
-              <button class="delete" aria-label="close"></button>
-            </header>
-            <section class="modal-card-body">              
-              <div class="control">
-                <input class="input is-primary my-3" type="hidden" name="taskId" value="{{row.task_id}}">
-                <input class="input is-primary my-3" type="text" name="taskName" value="{{row.task_name}}">
-              </div>
-              <div class="control">
-                <input class="input is-primary my-3" type="text" value="Task Status is : {{row.task_status}}" readonly>
-              </div>
-              <div class="select my-3">
-                <select name="taskStatus">
-                  <option value="">Select Task Status</option>
-                  <option value="notstarted">Not Started</option>
-                  <option value="progress">In-Progress</option>
-                  <option value="backlog">Backlog</option>
-                  <option value="completed">Completed</option>
-                </select>
-              </div>
-            </section>
-            <footer class="modal-card-foot">
-              <button class="button is-success">Save changes</button>
-              <button class="button">Cancel</button>
-            </footer>
+            <form action="/update/{{row.task_id}}" method="POST"> 
+              <header class="modal-card-head">
+                <p class="modal-card-title">Edit Task</p>
+                <button class="delete" aria-label="close"></button>
+              </header>
+              <section class="modal-card-body">              
+                <div class="control">
+                  <input class="input is-primary my-3" type="hidden" name="taskid" value="{{row.task_id}}">
+                  <input class="input is-primary my-3" type="text" name="taskName" value="{{row.task_name}}">
+                </div>
+                <div class="control">
+                  <input class="input is-primary my-3" type="text" value="Task Status is :{{row.task_status}}" readonly>
+                </div>
+                <div class="select my-3">
+                  <select name="taskStatus">
+                    <option value="notstarted">Select Task Status</option>
+                    <option value="progress">In-Progress</option>
+                    <option value="backlog">Backlog</option>
+                    <option value="completed">Completed</option>
+                  </select>
+                </div>
+              </section>
+              <footer class="modal-card-foot">
+                <button class="button is-success" type="submit">Update Task</button>
+              </footer>
+            </form>
           </div>
-        </form>
+        </div>
+        <!-- Edit Modal creation ends here -->
+        <a href="/delete/{{row.task_id}}" class="button is-rounded is-danger mx-3" data-target="editmodel" aria-haspopup="true">Delete</a>
       </div>
-      <!-- Edit Modal creation ends here -->
-      {% endfor %}
-    </div>
-    <div class="column has-background-warning has-text-info-dark is-size-4 has-text-centered">
-      On-Going Tasks
-    </div>
-    <div class="column has-background-danger has-text-white is-size-4 has-text-centered">
-      Backlogs
-    </div>
-    <div class="column has-background-success has-text-white is-size-4 has-text-centered ">
-      Completed
     </div>
   </div>
-  
 </div>
-
-
-
-
+{% endfor %}
+<!-- todo list ends here -->
 
 
 {% endblock %}

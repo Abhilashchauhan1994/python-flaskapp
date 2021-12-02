@@ -1,16 +1,15 @@
 from flask import Flask, render_template, request, redirect,flash
 from flask.helpers import url_for
-# import sqlalchemy
 from flask_sqlalchemy import SQLAlchemy
-#from sqlalchemy.ext.declarative import declarative_base
+import logging
+
 
 # initlizing the flask app
 app= Flask(__name__)
 app.secret_key="secert_key"
 
-# engine = sqlalchemy.create_engine("mariadb+mariadbconnector://root:admin@127.0.0.1:3306/flask_crud") #connecting my database with flask using sqlalchemy
-
 app.config['SQLALCHEMY_DATABASE_URI']="mariadb+mariadbconnector://username:''@127.0.0.1:3306/flask_crud"
+
 app.config['SQLALCHEMY_TRACK_MODITIFICATIONS']=False
 
 db =SQLAlchemy(app)
@@ -39,7 +38,7 @@ def addTodo():
     if request.method == 'POST':
 
         task_name =request.form['task']
-        task_status = "NotStarted"
+        task_status = "notstarted"
 
         todo_data = Todo(task_name,task_status)
         db.session.add(todo_data)
@@ -52,18 +51,17 @@ def addTodo():
 # Insertion routes ends
 
 # Creating an Update route
-@app.route("/update",methods=['GET','POST'])
-def updateTask():
-    if request.method=='POST':
-        Task_data = Todo.query.get(request.form['taskId'])
-        #print(Task_data)
-
-        Task_data.taskName = request.form['taskName']
-        Task_data.taskStatus = request.form['taskStatus']
+@app.route("/update/<task_id>",methods=['GET','POST'])
+def updateTask(task_id):
+    if request.method == 'POST':
+        new_data = Todo.query.filter_by(task_id =task_id).first()
+        app.logger.info(new_data)
+        new_data.task_name =request.form['taskName']
+        new_data.task_status =request.form['taskStatus']
 
         db.session.commit()
 
-        flash("Task has been updated successfully")
+        flash("Task updated successfully !!")
 
         return redirect(url_for('home'))
 #update routes ends here
@@ -82,6 +80,5 @@ def deleteTask(task_id):
 
 #main function
 if __name__ == "__main__":
-    app.run(debug=True,host='0.0.0.0')
-
-#https://www.youtube.com/watch?v=XTpLbBJTOM4&t=447s     
+    # app.run(debug=True,host='0.0.0.0') for debugging purpose
+    app.run()
