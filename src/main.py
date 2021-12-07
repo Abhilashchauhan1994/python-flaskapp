@@ -10,7 +10,7 @@ app= Flask(__name__)
 ui= FlaskUI(app,width=2000,height=5000)
 app.secret_key="secert_key"
 
-app.config['SQLALCHEMY_DATABASE_URI']="mariadb+mariadbconnector://root:admin@127.0.0.1:3306/flask_crud"
+app.config['SQLALCHEMY_DATABASE_URI']="mariadb+mariadbconnector://username:''@127.0.0.1:3306/flask_crud"
 
 app.config['SQLALCHEMY_TRACK_MODITIFICATIONS']=False
 
