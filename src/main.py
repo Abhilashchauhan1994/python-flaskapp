@@ -2,13 +2,15 @@ from flask import Flask, render_template, request, redirect,flash
 from flask.helpers import url_for
 from flask_sqlalchemy import SQLAlchemy
 import logging
+from flaskwebgui import FlaskUI
 
 
 # initlizing the flask app
 app= Flask(__name__)
+ui= FlaskUI(app,width=2000,height=5000)
 app.secret_key="secert_key"
 
-app.config['SQLALCHEMY_DATABASE_URI']="mariadb+mariadbconnector://username:''@127.0.0.1:3306/flask_crud"
+app.config['SQLALCHEMY_DATABASE_URI']="mariadb+mariadbconnector://root:admin@127.0.0.1:3306/flask_crud"
 
 app.config['SQLALCHEMY_TRACK_MODITIFICATIONS']=False
 
@@ -80,5 +82,6 @@ def deleteTask(task_id):
 
 #main function
 if __name__ == "__main__":
-    # app.run(debug=True,host='0.0.0.0') for debugging purpose
-    app.run()
+    #app.run(debug=True,host='0.0.0.0') #for debugging purpose
+    #app.run()
+    ui.run()
