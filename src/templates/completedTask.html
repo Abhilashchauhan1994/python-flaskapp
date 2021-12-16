@@ -28,56 +28,14 @@
         <strong>ADD TODO</strong> 
       </div>
       <div class="level-right is-size-4 mx-6 ">
-        <a href="/showcompletedtask" class="button is-rounded is-success modal-button mx-6">Show Complete</a>
-        <button class="button is-rounded is-warning modal-button" data-target="myModal" aria-haspopup="true">Create A Todo</button>
-        
-        <!-- creating a modal -->
-        <div class="modal" id="myModal">
-          <div class="modal-background"></div>
-          <div class="modal-card">
-            <form action="{{(url_for('addTodo'))}}" method="POST"> 
-              <header class="modal-card-head">
-                <p class="modal-card-title">New Task</p>
-                <!-- <button class="delete" aria-label="close"></button> -->
-                <label class="delete" for="element-toggle"></label>
-              </header>
-              <section class="modal-card-body">
-              <!-- creating form for task -->
-              
-                <div class="field">
-                  <label class="label">Task Name</label>
-                  <div class="control">
-                    <input class="input" type="text" placeholder="Enter the task" name="task">
-                  </div>
-                </div>
-            
-              </section>
-              <footer class="modal-card-foot">
-                <button class="button is-success" type="submit">Create Task</button>
-                <!-- <button class="button">Cancel</button> -->
-              </footer>
-            </form>
-          <!-- from ends -->
-          </div>
-        </div>
-        <!-- end of modal -->
+        <a href="/" class="button is-rounded is-success modal-button mx-6">Show Progress</a>
       </div>
     </div>
   </div>
 </div>
 
 <!-- todo list here -->
-{% if count == 0 %}
-<!-- message  -->
-<div class="container">
-  <div class="notification is-success my-4">
-    <button class="delete"></button>
-    <h1 class="has-text-centered">{{msg}}</h1>
-  </div>
-</div>
-<!-- message ends here -->
-{% else %}
-{% for row in Tasks %}
+{% for row in completed_tasks %}
 <div class="container">
   <div class="box py-3 my-3" style="background-color: #1d3557;">
     <div class="level">
@@ -85,16 +43,7 @@
         <span>{{row.task_name}}</span>
       </div>
       <div class="level-right is-size-4 ">
-        {% if row.task_status == 'notstarted' %}
-          <span class="tag is-dark mx-6 is-size-6 is-uppercase">{{row.task_status}}</span>
-        {% elif row.task_status == 'progress' %}
-          <span class="tag is-warning  mx-6 is-size-6 is-uppercase">{{row.task_status}}</span>
-        {% elif row.task_status == 'backlog' %}
-          <span class="tag is-danger  mx-6 is-size-6 is-uppercase">{{row.task_status}}</span>
-        {% else %}
           <span class="tag is-success  mx-6 is-size-6 is-uppercase">{{row.task_status}}</span>
-        {% endif %}
-          
         <button class="button is-rounded is-danger modal-button" data-target="editmodel{{row.task_id}}" aria-haspopup="true">Edit</button>
         <!-- creating edit modals  -->
         <div class="modal" id="editmodel{{row.task_id}}">
@@ -136,7 +85,6 @@
 </div>
 {% endfor %}
 <!-- todo list ends here -->
-{% endif %}
 
 
 {% endblock %}
