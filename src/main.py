@@ -94,6 +94,7 @@ def completed_tasks():
 
 #main function
 if __name__ == "__main__":
-    app.run(debug=True,host='0.0.0.0') #for debugging purpose
+    #app.run(debug=True,host='0.0.0.0') #for debugging purpose
+    app.run(host='127.0.0.1',port=5000) #for debugging purpose
     #app.run()
     #ui.run()
